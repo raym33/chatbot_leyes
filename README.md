@@ -87,6 +87,12 @@ INGEST_ALL=0                     # 1 = ingest ALL ~4000 state laws (slow first b
 
 Educational/research tool. It can be wrong or incomplete; **no RAG system is 100% accurate**. The cited sources are shown precisely so a qualified professional can verify. **This is not legal advice.**
 
+## 🧭 How it was built (great for learning)
+
+New to RAG or fine-tuning? **[JOURNEY.md](JOURNEY.md)** is a candid, beginner-friendly
+write-up of how retrieval went from ~16% to ~90% accuracy — the models, techniques,
+fine-tuning experiment, **real metrics**, and the mistakes/dead-ends along the way.
+
 ## 🛣️ Roadmap
 
 Want to make it better? See **[ROADMAP.md](ROADMAP.md)** for prioritized, concrete ideas
