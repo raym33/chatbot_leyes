@@ -83,6 +83,23 @@ We ran the **full pipeline end-to-end, 100% locally**:
 
 ---
 
+## On LLM size: should I just use the biggest model (Gemma 26B, Qwen 30B…)?
+
+Short answer: **a bigger LLM does not improve retrieval — only generation.** Know what you're buying.
+
+- **It does NOT raise Hit@k / recall.** In RAG the LLM doesn't search; it reads the articles *you already retrieved* and writes the answer. A 70B model **cannot cite an article that retrieval didn't fetch.** If your problem is "it can't find the law", a bigger LLM fixes *nothing* — fix embeddings/reranker.
+- **It DOES help the answer quality.** We saw it directly: a 12B model **invented** a wrong claim ("despido nulo" → indemnización); a 26B model avoided it and synthesized better. Bigger models hallucinate less, follow "don't extrapolate / cite the source" better, and handle Spanish better — **with diminishing returns.**
+
+**The costs are real:** latency (a 26–30B on CPU = minutes per answer), RAM (~16 GB for a 27B → on a 24 GB machine you must unload other models), and lower throughput.
+
+**The sweet spot we landed on:**
+1. **Prefer MoE models** (e.g. `gemma-4-26b-a4b`: 26B quality, ~4B active → fast). Best quality/latency trade — our default.
+2. Otherwise a **strong 7B–14B instruct** model is usually enough for RAG, because you supply the context. 14B→30B buys little for a lot of latency.
+3. **Quantization:** a big model at Q4 often follows instructions better than a small one at Q8 — but **measure it**.
+4. **Fit the model to your hardware and latency budget**, not the other way around.
+
+**How to decide (not by vibes):** evaluate *generation* with a rubric on the same questions — is it correct? does it hallucinate? does it cite properly? does it stay on-topic? — and pick the **biggest model that meets your latency budget.**
+
 ## Infrastructure & scaling lessons
 
 - **JSON does not scale for vectors.** Storing embeddings as JSON exploded to 243 MB for 14k articles (≈3.6 GB projected for the full corpus) and was slow to parse. We switched to a **binary `float32` store**: a `.bin` of contiguous vectors + an append-only `ids.txt` kept **in lockstep**, auto-realigned on restart. Compact and instant to load.
