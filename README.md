@@ -87,6 +87,11 @@ INGEST_ALL=0                     # 1 = ingest ALL ~4000 state laws (slow first b
 
 Educational/research tool. It can be wrong or incomplete; **no RAG system is 100% accurate**. The cited sources are shown precisely so a qualified professional can verify. **This is not legal advice.**
 
+## 🛣️ Roadmap
+
+Want to make it better? See **[ROADMAP.md](ROADMAP.md)** for prioritized, concrete ideas
+(reranker, embedder fine-tuning, jurisprudence, evaluation harness, streaming, GPU, …).
+
 ## 📄 License
 
 MIT — see [LICENSE](LICENSE). Law texts © public domain, retrieved from the [BOE](https://www.boe.es/datosabiertos/).
