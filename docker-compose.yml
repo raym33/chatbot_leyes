@@ -1,0 +1,41 @@
+# chatbot_leyes — one command to run everything, anywhere (Linux / macOS / Windows).
+#   docker compose up
+# First boot downloads the models and builds the index (be patient). Then open
+# http://localhost:8080
+#
+# Everything runs locally; no data leaves your machine.
+
+services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: chatleyes-ollama
+    restart: unless-stopped
+    volumes:
+      - ollama:/root/.ollama
+    # GPU (optional, big speedup on Linux/Windows with NVIDIA): uncomment below.
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices: [{ driver: nvidia, count: all, capabilities: [gpu] }]
+
+  app:
+    build: .
+    container_name: chatleyes-app
+    restart: unless-stopped
+    depends_on:
+      - ollama
+    environment:
+      - OLLAMA_HOST=http://ollama:11434
+      - OPENAI_BASE=http://ollama:11434/v1
+      - CHAT_MODEL=${CHAT_MODEL:-qwen2.5:7b-instruct}
+      - EMBED_MODEL=${EMBED_MODEL:-bge-m3}
+      - INGEST_ALL=${INGEST_ALL:-0}   # 1 = ingest ALL Spanish state laws (~4000, slow)
+      - PORT=8080
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./corpus:/app/corpus   # cached law corpus (so it isn't re-downloaded)
+      - ./data:/app/data       # cached embeddings (so they aren't recomputed)
+
+volumes:
+  ollama:

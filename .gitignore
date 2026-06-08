@@ -1,0 +1,8 @@
+node_modules/
+.env
+*.log
+# Generated data (downloaded/computed on first run — not versioned)
+corpus/boe.json
+corpus/_*.json
+data/embeddings.*
+.DS_Store

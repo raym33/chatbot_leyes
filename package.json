@@ -1,0 +1,13 @@
+{
+  "name": "chatbot_leyes",
+  "version": "1.0.0",
+  "description": "Local, open-source RAG chatbot over Spanish law (legislation) with verifiable citations. 100% local — no data leaves your machine.",
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "start": "node server.mjs",
+    "ingest": "node ingest.mjs",
+    "embed": "node embed.mjs"
+  },
+  "engines": { "node": ">=18" }
+}
